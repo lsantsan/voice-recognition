@@ -112,7 +112,53 @@ public class MainActivity extends Activity {
 	    }
 	  });
 
+    
 	  
+	  // DOWN handler
+	Handler messageHandler = new Handler() {
+		
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+			case 1: //GET DOWNSTREAM json id="@+id/comment"
+				String mtxt = msg.getData().getString("text");
+				if(mtxt.length() > 20){
+					final String f_msg = mtxt;
+					handler.post(new Runnable() { // This thread runs in the UI
+	                    //TREATMENT FOR GOOGLE RESPONSE
+						@Override		                    
+	                    public void run() {		                        
+	                        txtView.setText(f_msg);
+	                    }
+	                });
+				}
+				break;
+			case 2: 
+				break;
+			}
+		}
+	};  //doDOWNSTRM Handler end
+
+	
+	//UPSTREAM channel. its servicing a thread and should have its own handler				
+			Handler messageHandler2 = new Handler() {
+				
+				public void handleMessage(Message msg) {
+					super.handleMessage(msg);
+					switch (msg.what) {
+					case 1: //GET DOWNSTREAM json
+						Log.d("ParseStarter", msg.getData().getString("post"));
+						break;
+					case 2:
+						Log.d("ParseStarter", msg.getData().getString("post"));
+						break;
+					}
+	 
+				}
+			};  // UPstream handler end
+	
+	
+	
 /**************************************************************************************************************
  Implementation
  **/	
@@ -196,51 +242,13 @@ public class MainActivity extends Activity {
 		// then a future exec for the UPSTREAM / chunked encoding used so as not to limit
 		// the POST body sz		
 	    
-                // DOWN handler
-		Handler messageHandler = new Handler() {
-			
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
-				case 1: //GET DOWNSTREAM json id="@+id/comment"
-					String mtxt = msg.getData().getString("text");
-					if(mtxt.length() > 20){
-						final String f_msg = mtxt;
-						handler.post(new Runnable() { // This thread runs in the UI
-		                    //TREATMENT FOR GOOGLE RESPONSE
-							@Override		                    
-		                    public void run() {		                        
-		                        txtView.setText(f_msg);
-		                    }
-		                });
-					}
-					break;
-				case 2: 
-					break;
-				}
-			}
-		};  //doDOWNSTRM Handler end
+      
  
 		PAIR = MIN + (long)(Math.random() * ((MAX - MIN) + 1L));
                 // DOWN URL just like in curl full-duplex example plus the handler 		
 		downChannel(API_DOWN_URL+ PAIR,messageHandler);
  
-		//UPSTREAM channel. its servicing a thread and should have its own handler				
-		Handler messageHandler2 = new Handler() {
-			
-			public void handleMessage(Message msg) {
-				super.handleMessage(msg);
-				switch (msg.what) {
-				case 1: //GET DOWNSTREAM json
-					Log.d("ParseStarter", msg.getData().getString("post"));
-					break;
-				case 2:
-					Log.d("ParseStarter", msg.getData().getString("post"));
-					break;
-				}
- 
-			}
-		};  // UPstream handler end
+		
  
                 //UP chan, process the audio byteStream for interface to UrlConnection using 'chunked-encoding'
 		FileInputStream fis;
