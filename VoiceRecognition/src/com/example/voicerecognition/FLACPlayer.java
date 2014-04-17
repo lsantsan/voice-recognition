@@ -147,15 +147,13 @@ public class FLACPlayer extends Thread
     int sampleRate = mDecoder.sampleRate();    
     int channelConfig = mapChannelConfig(mDecoder.channels());
     int format = mapFormat(mDecoder.bitsPerSample());
-    
-    System.out.println("OLHA!: " + sampleRate + channelConfig + format);
 
     // Determine buffer size
     int decoder_bufsize = mDecoder.minBufferSize();
-    int playback_bufsize = AudioTrack.getMinBufferSize(sampleRate, channelConfig,
-        format);
-    int bufsize = Math.max(playback_bufsize, decoder_bufsize);
-
+    //Samsung galaxy S2 doesn't work here
+    //int playback_bufsize = AudioTrack.getMinBufferSize(sampleRate, channelConfig, format); 
+    //int bufsize = Math.max(playback_bufsize, decoder_bufsize);   
+    int bufsize = decoder_bufsize; 
     // Create AudioTrack.
     try {
       mAudioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,

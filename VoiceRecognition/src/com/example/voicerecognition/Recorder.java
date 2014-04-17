@@ -137,6 +137,15 @@ public class Recorder
     }
     // Pause recording & kill recorder
     mFLACRecorder.pauseRecording();
+    //Free memory!
+    mFLACRecorder.mShouldRun = false;
+    mFLACRecorder.interrupt();
+    try {
+    	mFLACRecorder.join();
+    } catch (InterruptedException ex) {
+      // pass
+    }
+    mFLACRecorder = null;
   }
 
 

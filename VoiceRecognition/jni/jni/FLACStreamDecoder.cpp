@@ -204,7 +204,9 @@ public:
 
     // These are set temporarily - this object does not own the buffer.
     m_buffer = buffer;
+    //m_buf_size = 4096; FOR SAMSUNG S2
     m_buf_size = bufsize / (m_bits_per_sample / 8);
+
     m_buf_used = 0;
 
     FLAC__bool result = 0;
@@ -237,6 +239,7 @@ public:
     m_buffer = NULL;
     m_buf_size = 0;
     return (result ? m_buf_used * (m_bits_per_sample / 8) : ret);
+
   }
 
 
